@@ -11,13 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('ticket_types', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('email')->unique();
-            $table->string('passwordHash');
+            $table->unsignedBigInteger('eventId');
             $table->string('name');
-            $table->enum('role', ['ORGANIZER', 'CUSTOMER'])->default('CUSTOMER');
+            $table->integer('priceIDR');
+            $table->integer('quota')->nullable();
             $table->timestamps();
+
+            $table->foreign('eventId')
+                ->references('id')
+                ->on('events')
+                ->cascadeOnDelete();
         });
     }
 
@@ -26,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('ticket_types');
     }
 };

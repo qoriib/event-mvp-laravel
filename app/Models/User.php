@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
 
 class User extends Authenticatable
 {
@@ -17,32 +17,43 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    protected $fillable = ['email', 'passwordHash', 'name', 'role'];
 
     /**
      * The attributes that should be hidden for serialization.
      *
      * @var list<string>
      */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    protected $hidden = ['passwordHash'];
 
     /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
+     * Available user roles.
      */
-    protected function casts(): array
+    public const ROLE_ORGANIZER = 'ORGANIZER';
+    public const ROLE_CUSTOMER = 'CUSTOMER';
+
+    public function setPasswordHashAttribute(string $value): void
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        $this->attributes['passwordHash'] = Hash::make($value);
+    }
+
+    public function organizer()
+    {
+        return $this->hasOne(OrganizerProfile::class, 'userId');
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'userId');
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class, 'userId');
+    }
+
+    public function ownedTickets()
+    {
+        return $this->hasMany(Ticket::class, 'ownerUserId');
     }
 }
