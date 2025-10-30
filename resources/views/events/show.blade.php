@@ -25,7 +25,14 @@
             <div class="space-y-2">
                 <h1 class="text-3xl font-semibold text-white md:text-4xl">{{ $event->title }}</h1>
                 <p class="text-sm text-gray-400">
-                    Diselenggarakan oleh <span class="text-indigo-200">{{ $event->organizer->displayName ?? '-' }}</span>
+                    Diselenggarakan oleh
+                    @if($event->organizer)
+                        <a href="{{ route('organizers.show', $event->organizer->id) }}" class="text-indigo-200 hover:text-indigo-100">
+                            {{ $event->organizer->displayName }}
+                        </a>
+                    @else
+                        <span class="text-indigo-200">-</span>
+                    @endif
                 </p>
             </div>
             <div class="grid gap-3 text-sm text-gray-300 sm:grid-cols-2">
@@ -90,18 +97,37 @@
                         <button type="submit" class="w-full rounded-lg bg-indigo-500 px-5 py-3 text-sm font-semibold text-white hover:bg-indigo-400">Checkout</button>
                     </form>
                 </div>
-                <div class="space-y-3 rounded-2xl border border-gray-800 bg-gray-950/60 p-5 text-sm text-gray-300">
-                    <h3 class="text-lg font-semibold text-white">Cara Pembayaran</h3>
-                    <p>Setelah melakukan checkout, unggah bukti transfer sebelum 2 jam agar pemesanan tidak kedaluwarsa.</p>
-                    <ul class="list-disc space-y-1 pl-5 text-xs text-gray-400">
-                        <li>Status <strong>Waiting Payment</strong>: unggah bukti transfer.</li>
-                        <li>Status <strong>Waiting Confirmation</strong>: menunggu verifikasi organizer (maks. 3 hari).</li>
-                        <li>Status <strong>Done</strong>: tiket digital akan diterbitkan.</li>
-                    </ul>
+                <div class="space-y-4 rounded-2xl border border-gray-800 bg-gray-950/60 p-5 text-sm text-gray-300">
+                    <div class="space-y-2">
+                        <h3 class="text-lg font-semibold text-white">Informasi Pembayaran</h3>
+                        <p class="text-xs text-gray-400">
+                            Transfer sesuai total pembayaran ke salah satu rekening berikut, lalu unggah bukti transfer maksimum 2 jam setelah transaksi dibuat.
+                        </p>
+                        <div class="space-y-2 text-xs text-gray-200">
+                            <div class="rounded-xl border border-gray-800 bg-gray-900/70 p-3">
+                                <p class="font-semibold text-white">Bank BCA</p>
+                                <p>No. Rekening: <span class="font-mono">123-456-7890</span></p>
+                                <p>a.n Eventify Indonesia</p>
+                            </div>
+                            <div class="rounded-xl border border-gray-800 bg-gray-900/70 p-3">
+                                <p class="font-semibold text-white">Bank Mandiri</p>
+                                <p>No. Rekening: <span class="font-mono">987-654-3210</span></p>
+                                <p>a.n Eventify Indonesia</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-1 text-xs text-gray-400">
+                        <p>Alur transaksi:</p>
+                        <ul class="list-disc space-y-1 pl-5">
+                            <li><strong>Waiting Payment</strong>: upload bukti transfer melalui form di bawah.</li>
+                            <li><strong>Waiting Confirmation</strong>: penyelenggara memverifikasi (maks. 3 hari).</li>
+                            <li><strong>Done</strong>: tiket digital diterbitkan dan dapat diunduh dari dashboard.</li>
+                        </ul>
+                    </div>
                 </div>
             </section>
 
-            <section class="space-y-4">
+            <section class="space-y-4" id="transactions">
                 <h2 class="text-xl font-semibold text-white">Transaksi Saya</h2>
                 @if($customerTransactions->isEmpty())
                     <div class="rounded-2xl border border-dashed border-gray-700 bg-gray-900/40 p-8 text-center text-gray-400">
@@ -128,6 +154,9 @@
                                 </ul>
 
                                 @if($transaction->status === \App\Models\Transaction::STATUS_WAITING_PAYMENT)
+                                    <div class="rounded-xl border border-indigo-500/20 bg-indigo-500/10 p-3 text-xs text-indigo-100">
+                                        Transfer ke BCA 123-456-7890 a.n Eventify Indonesia atau Mandiri 987-654-3210 a.n Eventify Indonesia, lalu unggah bukti melalui form berikut.
+                                    </div>
                                     <form action="{{ route('transactions.proof', $transaction->id) }}" method="POST" enctype="multipart/form-data" class="space-y-2">
                                         @csrf
                                         <label class="text-xs font-medium text-gray-200" for="paymentProof-{{ $transaction->id }}">Unggah bukti transfer (jpg, png, pdf maks. 2MB)</label>
@@ -144,6 +173,61 @@
                     </div>
                 @endif
             </section>
+
+            @if($canReview)
+                <section class="space-y-4 rounded-3xl border border-gray-800 bg-gray-900/70 p-6">
+                    <header class="space-y-1">
+                        <h2 class="text-xl font-semibold text-white">Bagikan Pengalamanmu</h2>
+                        <p class="text-sm text-gray-400">
+                            Beri ulasan untuk membantu peserta lain dan meningkatkan kualitas event ini.
+                        </p>
+                    </header>
+                    <form action="{{ route('events.reviews.store', $event->id) }}" method="POST" class="space-y-4">
+                        @csrf
+                        <div class="grid gap-4 md:grid-cols-2">
+                            <div class="space-y-2">
+                                <label for="rating-event" class="text-sm font-medium text-gray-200">Rating</label>
+                                <select
+                                    id="rating-event"
+                                    name="rating"
+                                    required
+                                    class="w-full rounded-lg border border-gray-700 bg-gray-950/60 px-4 py-2 text-sm text-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                                >
+                                    @for($i = 5; $i >= 1; $i--)
+                                        <option value="{{ $i }}" @selected((int) old('rating', 5) === $i)>{{ $i }} &mdash; {{ $i === 5 ? 'Luar biasa' : ($i === 4 ? 'Bagus' : ($i === 3 ? 'Cukup' : ($i === 2 ? 'Kurang' : 'Buruk'))) }}</option>
+                                    @endfor
+                                </select>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <label for="comment-event" class="text-sm font-medium text-gray-200">Komentar (opsional)</label>
+                            <textarea
+                                id="comment-event"
+                                name="comment"
+                                rows="4"
+                                class="w-full rounded-lg border border-gray-700 bg-gray-950/60 px-4 py-2 text-sm text-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                                placeholder="Bagaimana pengalamanmu menghadiri event ini?"
+                            >{{ old('comment') }}</textarea>
+                        </div>
+                        <button type="submit" class="rounded-lg bg-indigo-500 px-5 py-2 text-sm font-semibold text-white hover:bg-indigo-400">
+                            Kirim Review
+                        </button>
+                    </form>
+                </section>
+            @elseif($userReview)
+                <section class="space-y-3 rounded-3xl border border-gray-800 bg-gray-900/70 p-6">
+                    <header class="flex items-center justify-between">
+                        <h2 class="text-xl font-semibold text-white">Ulasanmu</h2>
+                        <span class="rounded-full bg-indigo-500/10 px-3 py-1 text-sm text-indigo-200">Rating {{ $userReview->rating }}/5</span>
+                    </header>
+                    <p class="text-sm text-gray-300 leading-relaxed">
+                        {{ $userReview->comment ?? 'Kamu memberikan rating tanpa komentar.' }}
+                    </p>
+                    <p class="text-xs text-gray-500">
+                        Dikirim {{ $userReview->created_at?->diffForHumans() }}
+                    </p>
+                </section>
+            @endif
         @endif
 
         @if($user->role === \App\Models\User::ROLE_ORGANIZER && $isOrganizerOwner)
@@ -170,6 +254,9 @@
                                         <td class="px-4 py-3">
                                             <p class="font-medium text-white">{{ $transaction->user->name ?? 'Peserta' }}</p>
                                             <p class="text-xs text-gray-400">{{ $transaction->user->email ?? '-' }}</p>
+                                            @if($transaction->paymentProofUrl)
+                                                <a href="{{ $transaction->paymentProofUrl }}" target="_blank" class="mt-1 inline-block text-xs text-indigo-300 hover:text-indigo-100">Bukti pembayaran</a>
+                                            @endif
                                         </td>
                                         <td class="px-4 py-3 text-xs text-gray-300">
                                             {{ $transaction->items->pluck('ticketType.name')->implode(', ') ?: '-' }}
@@ -180,7 +267,7 @@
                                             </span>
                                         </td>
                                         <td class="px-4 py-3">
-                                            <form action="{{ route('transactions.status', $transaction->id) }}" method="POST" class="flex items-center gap-2 text-xs">
+                                            <form action="{{ route('transactions.status', $transaction->id) }}" method="POST" class="flex flex-col gap-2 text-xs">
                                                 @csrf
                                                 <select name="status" class="rounded-lg border border-gray-700 bg-gray-950/60 px-2 py-1 text-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
                                                     @foreach($statusOptions as $status)
@@ -189,13 +276,10 @@
                                                         </option>
                                                     @endforeach
                                                 </select>
-                                                <button type="submit" class="rounded-lg bg-indigo-500 px-3 py-1 font-semibold text-white hover:bg-indigo-400">
-                                                    Update
+                                                <button type="submit" class="self-start rounded-lg bg-indigo-500 px-3 py-1 font-semibold text-white hover:bg-indigo-400">
+                                                    Update Status
                                                 </button>
                                             </form>
-                                            @if($transaction->paymentProofUrl)
-                                                <a href="{{ $transaction->paymentProofUrl }}" target="_blank" class="mt-2 block text-xs text-indigo-300 hover:text-indigo-100">Lihat bukti pembayaran</a>
-                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach

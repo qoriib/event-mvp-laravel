@@ -1,4 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.auth')
+
+@section('title', 'Masuk')
 
 @section('content')
 <section class="mx-auto max-w-md space-y-6 rounded-3xl border border-gray-800 bg-gray-900/70 p-8 shadow-xl">

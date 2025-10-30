@@ -18,9 +18,9 @@
                     @auth
                         @if(auth()->user()->role === \App\Models\User::ROLE_ORGANIZER)
                             <a href="{{ route('organizer.dashboard') }}" class="{{ request()->routeIs('organizer.*') ? 'text-white' : 'text-gray-300 hover:text-white' }}">Organize</a>
-                            <a href="{{ route('organizer.dashboard') }}" class="{{ request()->routeIs('organizer.*') ? 'text-white' : 'text-gray-300 hover:text-white' }}">Dashboard</a>
+                            <a href="{{ route('organizer.dashboard') }}#profile" class="{{ request()->routeIs('organizer.*') ? 'text-white' : 'text-gray-300 hover:text-white' }}">Profile</a>
                         @else
-                            <a href="{{ route('customer.dashboard') }}" class="{{ request()->routeIs('customer.*') ? 'text-white' : 'text-gray-300 hover:text-white' }}">Dashboard</a>
+                            <a href="{{ route('customer.dashboard') }}#profile" class="{{ request()->routeIs('customer.*') ? 'text-white' : 'text-gray-300 hover:text-white' }}">Profile</a>
                         @endif
                         <form action="{{ route('logout') }}" method="POST" class="m-0 inline">
                             @csrf
@@ -42,6 +42,11 @@
             @if(session('success'))
                 <div class="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-100">
                     {{ session('success') }}
+                </div>
+            @endif
+            @if(session('info'))
+                <div class="rounded-2xl border border-indigo-500/30 bg-indigo-500/10 px-4 py-3 text-sm text-indigo-100">
+                    {{ session('info') }}
                 </div>
             @endif
             @if(session('error'))

@@ -4,15 +4,18 @@ use App\Http\Controllers\Web\Auth\LoginController;
 use App\Http\Controllers\Web\Auth\RegisterController;
 use App\Http\Controllers\Web\CustomerDashboardController;
 use App\Http\Controllers\Web\EventListController;
+use App\Http\Controllers\Web\EventReviewController;
 use App\Http\Controllers\Web\EventShowController;
 use App\Http\Controllers\Web\EventTransactionController;
 use App\Http\Controllers\Web\HomeController;
 use App\Http\Controllers\Web\OrganizerDashboardController;
+use App\Http\Controllers\Web\OrganizerProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
 Route::get('/events', EventListController::class)->name('events.index');
 Route::get('/events/{event}', EventShowController::class)->name('events.show');
+Route::get('/organizers/{organizer}', OrganizerProfileController::class)->name('organizers.show');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'create'])->name('login');
@@ -44,4 +47,6 @@ Route::middleware('auth')->group(function () {
         ->name('transactions.proof');
     Route::post('/transactions/{transaction}/status', [EventTransactionController::class, 'updateStatus'])
         ->name('transactions.status');
+    Route::post('/events/{event}/reviews', [EventReviewController::class, 'store'])
+        ->name('events.reviews.store');
 });

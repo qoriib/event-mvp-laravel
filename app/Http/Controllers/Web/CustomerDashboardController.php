@@ -22,7 +22,12 @@ class CustomerDashboardController extends Controller
         }
 
         $transactions = Transaction::with([
-            'event:id,title,location,startAt,endAt',
+            'event' => function ($query) use ($user) {
+                $query->select('id', 'title', 'location', 'startAt', 'endAt')
+                    ->with(['reviews' => function ($reviewQuery) use ($user) {
+                        $reviewQuery->where('userId', $user->id)->select('id', 'eventId', 'userId', 'rating', 'comment');
+                    }]);
+            },
             'items.ticketType:id,name',
         ])
             ->where('userId', $user->id)

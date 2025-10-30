@@ -122,7 +122,7 @@
                 <button type="submit" class="rounded-lg bg-indigo-500 px-5 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-400">
                     Temukan Event
                 </button>
-                <a href="#" class="rounded-lg border border-gray-700 px-5 py-2 text-sm font-semibold text-gray-200 hover:border-indigo-400 hover:text-white">
+                <a href="{{ route('register') }}" class="rounded-lg border border-gray-700 px-5 py-2 text-sm font-semibold text-gray-200 hover:border-indigo-400 hover:text-white">
                     Jadi Organizer
                 </a>
             </div>
@@ -169,6 +169,16 @@
                                     <h3 class="text-lg font-semibold text-white">
                                         {{ $event->title }}
                                     </h3>
+                                    <p class="text-xs text-gray-400">
+                                        Oleh
+                                        @if($event->organizer)
+                                            <a href="{{ route('organizers.show', $event->organizer->id) }}" class="text-indigo-200 hover:text-indigo-100">
+                                                {{ $event->organizer->displayName }}
+                                            </a>
+                                        @else
+                                            <span class="text-indigo-200">-</span>
+                                        @endif
+                                    </p>
                                     <p class="text-sm text-gray-300 line-clamp-2">
                                         {{ $event->description ?? 'Belum ada deskripsi event.' }}
                                     </p>
@@ -185,7 +195,7 @@
                             </div>
                             <div class="mt-4 flex items-center justify-between text-sm text-indigo-50">
                                 <span>{{ $priceLabel($event) }}</span>
-                                <a href="#" class="rounded-lg border border-indigo-400 px-4 py-1 text-xs font-semibold text-indigo-100 hover:bg-indigo-500/20">
+                                <a href="{{ route('events.show', $event->id) }}" class="rounded-lg border border-indigo-400 px-4 py-1 text-xs font-semibold text-indigo-100 hover:bg-indigo-500/20">
                                     Detail Event
                                 </a>
                             </div>
@@ -210,7 +220,7 @@
                 Kami perbarui daftar ini setiap hari. Dapatkan inspirasi event, mulai dari konser intim hingga konferensi kreatif.
             </p>
         </div>
-        <a href="#" class="rounded-lg border border-indigo-400 px-5 py-2 text-sm font-semibold text-indigo-200 hover:bg-indigo-500/20">
+        <a href="{{ route('events.index') }}" class="rounded-lg border border-indigo-400 px-5 py-2 text-sm font-semibold text-indigo-200 hover:bg-indigo-500/20">
             Jelajahi Semua Event
         </a>
     </div>
@@ -233,7 +243,7 @@
                     </p>
                     <div class="mt-auto flex items-center justify-between text-sm text-indigo-100">
                         <span>{{ $priceLabel($event) }}</span>
-                        <a href="#" class="rounded-lg bg-indigo-500 px-4 py-1 text-xs font-semibold text-white hover:bg-indigo-400">
+                        <a href="{{ route('events.show', $event->id) }}" class="rounded-lg bg-indigo-500 px-4 py-1 text-xs font-semibold text-white hover:bg-indigo-400">
                             Lihat Detail
                         </a>
                     </div>
@@ -333,10 +343,10 @@
         Aktifkan akun organizer, pasarkan eventmu ke puluhan ribu audiens, dan kelola transaksi secara aman.
     </p>
     <div class="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
-        <a href="#" class="rounded-lg bg-indigo-500 px-5 py-2 text-sm font-semibold text-white hover:bg-indigo-400">
+        <a href="{{ route('register') }}" class="rounded-lg bg-indigo-500 px-5 py-2 text-sm font-semibold text-white hover:bg-indigo-400">
             Mulai Buat Event
         </a>
-        <a href="#" class="rounded-lg border border-indigo-200 px-5 py-2 text-sm font-semibold text-indigo-100 hover:bg-indigo-500/20">
+        <a href="{{ route('events.index') }}" class="rounded-lg border border-indigo-200 px-5 py-2 text-sm font-semibold text-indigo-100 hover:bg-indigo-500/20">
             Lihat Agenda Event
         </a>
     </div>

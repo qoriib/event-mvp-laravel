@@ -26,7 +26,7 @@
         </div>
     @endif
 
-    <section class="grid gap-6 md:grid-cols-[1.1fr,0.9fr]">
+    <section class="grid gap-6 md:grid-cols-[1.1fr,0.9fr]" id="profile">
         <form action="{{ route('organizer.profile.update') }}" method="POST" class="space-y-4 rounded-2xl border border-gray-800 bg-gray-900/70 p-6">
             @csrf
             <h2 class="text-xl font-semibold text-white">Profil Organisasi</h2>

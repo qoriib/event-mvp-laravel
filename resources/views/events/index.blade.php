@@ -106,6 +106,16 @@
                         </span>
                     @endif
                     <h3 class="text-lg font-semibold text-white">{{ $event->title }}</h3>
+                    <p class="text-xs text-gray-400">
+                        Oleh
+                        @if($event->organizer)
+                            <a href="{{ route('organizers.show', $event->organizer->id) }}" class="text-indigo-200 hover:text-indigo-100">
+                                {{ $event->organizer->displayName }}
+                            </a>
+                        @else
+                            <span class="text-indigo-200">-</span>
+                        @endif
+                    </p>
                     <p class="text-sm text-gray-400 line-clamp-3">
                         {{ $event->description ?? 'Belum ada deskripsi event.' }}
                     </p>

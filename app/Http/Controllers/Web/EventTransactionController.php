@@ -42,7 +42,7 @@ class EventTransactionController extends Controller
         $qty = $validated['qty'];
         $unitPrice = (int) $ticketType->priceIDR;
         $subtotal = $unitPrice * $qty;
-        $status = $unitPrice > 0 ? Transaction::STATUS_WAITING_PAYMENT : Transaction::STATUS_WAITING_CONFIRMATION;
+        $status = Transaction::STATUS_WAITING_PAYMENT;
 
         DB::transaction(function () use ($user, $event, $ticketType, $qty, $unitPrice, $subtotal, $status) {
             /** @var Transaction $transaction */
@@ -72,9 +72,7 @@ class EventTransactionController extends Controller
             ]);
         });
 
-        return back()->with('success', $status === Transaction::STATUS_WAITING_PAYMENT
-            ? 'Transaksi dibuat. Silakan unggah bukti pembayaran sebelum 2 jam.'
-            : 'Tiket gratis berhasil di-claim. Menunggu konfirmasi penyelenggara.');
+        return back()->with('success', 'Transaksi dibuat. Silakan unggah bukti pembayaran sebelum 2 jam.');
     }
 
     public function uploadProof(Request $request, Transaction $transaction): RedirectResponse
@@ -100,6 +98,7 @@ class EventTransactionController extends Controller
             'paymentProofUrl' => Storage::disk('public')->url($path),
             'paymentProofAt' => now(),
             'status' => Transaction::STATUS_WAITING_CONFIRMATION,
+            'decisionDueAt' => now()->addDays(3),
         ]);
 
         return back()->with('success', 'Bukti pembayaran telah diunggah. Penyelenggara akan memverifikasi dalam 3 hari.');

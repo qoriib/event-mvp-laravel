@@ -11,7 +11,7 @@ class HomeController extends Controller
 {
     public function __invoke(): View
     {
-        $events = Event::with('ticketTypes')
+        $events = Event::with(['ticketTypes', 'organizer'])
             ->orderBy('startAt')
             ->take(6)
             ->get();
