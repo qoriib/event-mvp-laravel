@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -24,7 +25,7 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-    protected $hidden = ['passwordHash'];
+    protected $hidden = ['passwordHash', 'remember_token'];
 
     /**
      * Available user roles.
@@ -35,6 +36,11 @@ class User extends Authenticatable
     public function setPasswordHashAttribute(string $value): void
     {
         $this->attributes['passwordHash'] = Hash::make($value);
+    }
+
+    public function getAuthPassword(): string
+    {
+        return $this->passwordHash;
     }
 
     public function organizer()
