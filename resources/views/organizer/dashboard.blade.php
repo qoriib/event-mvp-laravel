@@ -144,6 +144,21 @@
             @else
                 <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
                     @foreach($events as $event)
+                        @php
+                            $isOldForEvent = old('_event_id') == $event->id;
+                            $eventTicketTypes = $event->ticketTypes->values();
+                            $oldTicketTypes = $isOldForEvent ? collect(old('ticketTypes', []))->values() : collect();
+                            $ticketRepeats = max($eventTicketTypes->count(), $oldTicketTypes->count(), 3);
+                            $oldTicketTypesData = $oldTicketTypes->toArray();
+                            $editTitle = $isOldForEvent ? old('title', $event->title) : $event->title;
+                            $editCategory = $isOldForEvent ? old('category', $event->category) : $event->category;
+                            $editLocation = $isOldForEvent ? old('location', $event->location) : $event->location;
+                            $editCapacity = $isOldForEvent ? old('capacity', $event->capacity) : $event->capacity;
+                            $editStartAt = $isOldForEvent ? old('startAt') : optional($event->startAt)->format('Y-m-d\TH:i');
+                            $editEndAt = $isOldForEvent ? old('endAt') : optional($event->endAt)->format('Y-m-d\TH:i');
+                            $editDescription = $isOldForEvent ? old('description', $event->description) : $event->description;
+                            $editIsPaid = (int) ($isOldForEvent ? old('isPaid', $event->isPaid ? 1 : 0) : ($event->isPaid ? 1 : 0));
+                        @endphp
                         <article class="flex h-full flex-col gap-3 rounded-2xl border border-gray-800 bg-gray-900/70 p-6">
                             <header class="space-y-1">
                                 <span class="text-xs uppercase tracking-wide text-indigo-200">
@@ -162,13 +177,115 @@
                                 <span>Kuota kursi: {{ number_format($event->capacity) }}</span>
                                 <span>Tersisa: {{ number_format($event->seatsAvailable) }}</span>
                             </div>
-                            <footer class="mt-auto flex items-center justify-between text-sm text-indigo-100">
-                                <span>Review: {{ $event->reviews->count() }}</span>
-                                <a href="{{ route('events.show', $event->id) }}" class="rounded-lg border border-indigo-500/40 px-3 py-1 text-xs font-semibold text-indigo-100 hover:bg-indigo-500/20">
-                                    Lihat Detail
-                                </a>
+                            <footer class="mt-auto space-y-3 text-sm text-indigo-100">
+                                <div class="flex items-center justify-between">
+                                    <span>Review: {{ $event->reviews->count() }}</span>
+                                    <a href="{{ route('events.show', $event->id) }}" class="rounded-lg border border-indigo-500/40 px-3 py-1 text-xs font-semibold text-indigo-100 hover:bg-indigo-500/20">
+                                        Lihat Detail
+                                    </a>
+                                </div>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <button
+                                        type="button"
+                                        class="rounded-lg border border-gray-700 px-3 py-1 text-xs font-semibold text-gray-200 transition hover:border-indigo-400 hover:text-white"
+                                        data-modal-target="edit-event-{{ $event->id }}"
+                                        data-modal-toggle="edit-event-{{ $event->id }}"
+                                    >
+                                        Edit Event
+                                    </button>
+                                    <form action="{{ route('organizer.events.destroy', $event->id) }}" method="POST" onsubmit="return confirm('Hapus event ini? Tindakan tidak dapat dibatalkan.');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="rounded-lg border border-red-500/40 px-3 py-1 text-xs font-semibold text-red-200 transition hover:bg-red-500/10">
+                                            Hapus
+                                        </button>
+                                    </form>
+                                </div>
                             </footer>
                         </article>
+
+                        <div id="edit-event-{{ $event->id }}" tabindex="-1" aria-hidden="true" class="fixed left-0 right-0 top-0 z-50 hidden h-full w-full overflow-y-auto overflow-x-hidden bg-black/70 p-4 md:inset-0">
+                            <div class="relative mx-auto w-full max-w-4xl">
+                                <div class="relative space-y-5 rounded-3xl border border-gray-800 bg-gray-950/95 p-6 shadow-xl">
+                                    <button type="button" class="absolute right-4 top-4 text-gray-500 hover:text-white" data-modal-hide="edit-event-{{ $event->id }}">
+                                        <span class="sr-only">Tutup</span>
+                                        &times;
+                                    </button>
+                                    <header class="space-y-1 pr-8">
+                                        <h3 class="text-xl font-semibold text-white">Edit Event</h3>
+                                        <p class="text-sm text-gray-400">Perbarui informasi event sesuai kebutuhanmu.</p>
+                                    </header>
+                                    <form action="{{ route('organizer.events.update', $event->id) }}" method="POST" class="space-y-4">
+                                        @csrf
+                                        @method('PUT')
+                                        <input type="hidden" name="_event_id" value="{{ $event->id }}" />
+                                        <div class="grid gap-4 sm:grid-cols-2">
+                                            <div class="space-y-2">
+                                                <label class="text-sm font-medium text-gray-200" for="title-{{ $event->id }}">Judul Event</label>
+                                                <input type="text" id="title-{{ $event->id }}" name="title" required class="w-full rounded-lg border border-gray-700 bg-gray-950/60 px-4 py-2 text-sm text-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" value="{{ $editTitle }}" />
+                                            </div>
+                                            <div class="space-y-2">
+                                                <label class="text-sm font-medium text-gray-200" for="category-{{ $event->id }}">Kategori</label>
+                                                <input type="text" id="category-{{ $event->id }}" name="category" class="w-full rounded-lg border border-gray-700 bg-gray-950/60 px-4 py-2 text-sm text-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" value="{{ $editCategory }}" />
+                                            </div>
+                                            <div class="space-y-2">
+                                                <label class="text-sm font-medium text-gray-200" for="location-{{ $event->id }}">Lokasi</label>
+                                                <input type="text" id="location-{{ $event->id }}" name="location" required class="w-full rounded-lg border border-gray-700 bg-gray-950/60 px-4 py-2 text-sm text-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" value="{{ $editLocation }}" />
+                                            </div>
+                                            <div class="space-y-2">
+                                                <label class="text-sm font-medium text-gray-200" for="capacity-{{ $event->id }}">Kapasitas</label>
+                                                <input type="number" id="capacity-{{ $event->id }}" name="capacity" min="1" required class="w-full rounded-lg border border-gray-700 bg-gray-950/60 px-4 py-2 text-sm text-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" value="{{ $editCapacity }}" />
+                                            </div>
+                                        </div>
+                                        <div class="grid gap-4 sm:grid-cols-2">
+                                            <div class="space-y-2">
+                                                <label class="text-sm font-medium text-gray-200" for="startAt-{{ $event->id }}">Mulai</label>
+                                                <input type="datetime-local" id="startAt-{{ $event->id }}" name="startAt" required class="w-full rounded-lg border border-gray-700 bg-gray-950/60 px-4 py-2 text-sm text-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" value="{{ $editStartAt }}" />
+                                            </div>
+                                            <div class="space-y-2">
+                                                <label class="text-sm font-medium text-gray-200" for="endAt-{{ $event->id }}">Selesai</label>
+                                                <input type="datetime-local" id="endAt-{{ $event->id }}" name="endAt" required class="w-full rounded-lg border border-gray-700 bg-gray-950/60 px-4 py-2 text-sm text-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" value="{{ $editEndAt }}" />
+                                            </div>
+                                        </div>
+                                        <div class="space-y-2">
+                                            <label class="text-sm font-medium text-gray-200" for="description-{{ $event->id }}">Deskripsi</label>
+                                            <textarea id="description-{{ $event->id }}" name="description" rows="4" class="w-full rounded-lg border border-gray-700 bg-gray-950/60 px-4 py-2 text-sm text-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">{{ $editDescription }}</textarea>
+                                        </div>
+                                        <div class="space-y-3">
+                                            <span class="text-sm font-semibold text-white">Jenis Tiket</span>
+                                            @for ($i = 0; $i < $ticketRepeats; $i++)
+                                                @php
+                                                    $ticket = $eventTicketTypes[$i] ?? null;
+                                                    $nameValue = $isOldForEvent ? data_get($oldTicketTypesData, $i.'.name', $ticket->name ?? '') : ($ticket->name ?? '');
+                                                    $priceValue = $isOldForEvent ? data_get($oldTicketTypesData, $i.'.priceIDR', $ticket->priceIDR ?? '') : ($ticket->priceIDR ?? '');
+                                                    $quotaValue = $isOldForEvent ? data_get($oldTicketTypesData, $i.'.quota', $ticket->quota ?? '') : ($ticket->quota ?? '');
+                                                @endphp
+                                                <div class="grid gap-3 rounded-2xl border border-gray-800 bg-gray-900/50 p-4 sm:grid-cols-3">
+                                                    <input type="text" name="ticketTypes[{{ $i }}][name]" placeholder="Nama tiket" class="rounded-lg border border-gray-700 bg-gray-950/60 px-3 py-2 text-sm text-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" value="{{ $nameValue }}" />
+                                                    <input type="number" min="0" name="ticketTypes[{{ $i }}][priceIDR]" placeholder="Harga" class="rounded-lg border border-gray-700 bg-gray-950/60 px-3 py-2 text-sm text-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" value="{{ $priceValue }}" />
+                                                    <input type="number" min="1" name="ticketTypes[{{ $i }}][quota]" placeholder="Kuota (opsional)" class="rounded-lg border border-gray-700 bg-gray-950/60 px-3 py-2 text-sm text-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" value="{{ $quotaValue }}" />
+                                                </div>
+                                            @endfor
+                                            <p class="text-xs text-gray-500">Kosongkan baris yang tidak diperlukan. Minimal satu tiket wajib diisi.</p>
+                                        </div>
+                                        <div class="flex items-center gap-3">
+                                            <input type="hidden" name="isPaid" value="0" />
+                                            <label class="inline-flex items-center gap-2 text-sm text-gray-300">
+                                                <input type="checkbox" name="isPaid" value="1" class="rounded border-gray-700 bg-gray-950 text-indigo-500 focus:ring-indigo-500" {{ $editIsPaid ? 'checked' : '' }} /> Event berbayar
+                                            </label>
+                                        </div>
+                                        <div class="flex items-center justify-end gap-3">
+                                            <button type="button" class="rounded-lg border border-gray-700 px-4 py-2 text-sm font-semibold text-gray-200 hover:border-gray-500" data-modal-hide="edit-event-{{ $event->id }}">
+                                                Batal
+                                            </button>
+                                            <button type="submit" class="rounded-lg bg-indigo-500 px-5 py-2 text-sm font-semibold text-white hover:bg-indigo-400">
+                                                Simpan Perubahan
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     @endforeach
                 </div>
                 <div class="pt-4">{{ $events->links('pagination::tailwind') }}</div>

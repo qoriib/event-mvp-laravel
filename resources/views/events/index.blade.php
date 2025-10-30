@@ -97,8 +97,8 @@
             @foreach ($events as $event)
                 <article class="flex h-full flex-col gap-4 rounded-2xl border border-gray-800 bg-gray-900/70 p-6 transition hover:border-indigo-400/40">
                     <header class="flex items-center justify-between text-xs text-gray-400">
-                        <span class="flex items-center gap-2">📅 {{ $formatDateRange($event->startAt, $event->endAt) }}</span>
-                        <span class="flex items-center gap-2">📍 {{ $event->location }}</span>
+                        <span class="flex items-center gap-2">Tanggal {{ $formatDateRange($event->startAt, $event->endAt) }}</span>
+                        <span class="flex items-center gap-2">Lokasi {{ $event->location }}</span>
                     </header>
                     @if ($event->category)
                         <span class="self-start rounded-full border border-indigo-500/30 bg-indigo-500/10 px-3 py-1 text-xs uppercase tracking-wide text-indigo-200">

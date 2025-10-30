@@ -12,17 +12,14 @@
         [
             'title' => 'Kurasi Event Real-time',
             'description' => 'Dapatkan rekomendasi personal berdasarkan minat dan lokasi favoritmu. Notifikasi early bird langsung ke email.',
-            'icon' => '✨',
         ],
         [
             'title' => 'Dashboard Organizer Lengkap',
             'description' => 'Kelola agenda, kuota kursi, hingga laporan transaksi dari satu tempat. Tingkatkan penjualan dengan analitik praktis.',
-            'icon' => '📊',
         ],
         [
             'title' => 'Transaksi Aman & Transparan',
             'description' => 'Pembayaran terintegrasi, dukungan bukti transfer, dan validasi tiket otomatis saat peserta check-in.',
-            'icon' => '🛡️',
         ],
     ];
 
@@ -162,8 +159,7 @@
                         <div class="rounded-2xl border border-indigo-500/10 bg-gradient-to-r from-indigo-950/50 via-gray-900 to-gray-900 p-5 transition hover:border-indigo-400/40">
                             <div class="flex items-start justify-between gap-4">
                                 <div class="space-y-2">
-                                    <p class="flex items-center gap-2 text-xs uppercase tracking-wide text-indigo-200">
-                                        <span>📅</span>
+                                    <p class="text-xs uppercase tracking-wide text-indigo-200">
                                         {{ $formatDateRange($event->startAt, $event->endAt) }}
                                     </p>
                                     <h3 class="text-lg font-semibold text-white">
@@ -183,7 +179,7 @@
                                         {{ $event->description ?? 'Belum ada deskripsi event.' }}
                                     </p>
                                     <div class="flex flex-wrap items-center gap-2 text-xs text-gray-400">
-                                        <span class="flex items-center gap-1">📍 {{ $event->location }}</span>
+                                        <span class="flex items-center gap-1">Lokasi {{ $event->location }}</span>
                                         @if ($event->category)
                                             <span class="rounded-full border border-indigo-500/30 bg-indigo-500/10 px-2 py-0.5 text-indigo-200">
                                                 {{ $event->category }}
@@ -191,7 +187,9 @@
                                         @endif
                                     </div>
                                 </div>
-                                <span class="text-2xl text-indigo-200">🎟️</span>
+                                <span class="rounded-full border border-indigo-500/30 bg-indigo-500/10 px-3 py-1 text-xs uppercase tracking-wide text-indigo-200">
+                                    Tiket
+                                </span>
                             </div>
                             <div class="mt-4 flex items-center justify-between text-sm text-indigo-50">
                                 <span>{{ $priceLabel($event) }}</span>
@@ -210,8 +208,8 @@
 <section class="space-y-8">
     <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
-            <p class="flex items-center gap-2 text-sm uppercase tracking-wide text-indigo-200">
-                <span>🎶</span> Agenda Terbaru
+            <p class="text-sm uppercase tracking-wide text-indigo-200">
+                Agenda Terbaru
             </p>
             <h2 class="text-3xl font-semibold text-white md:text-4xl">
                 Event mendatang yang wajib kamu pantau
@@ -234,8 +232,8 @@
             @foreach ($upcomingEvents as $event)
                 <div class="flex h-full flex-col gap-4 rounded-2xl border border-gray-800 bg-gray-900/70 p-5 transition hover:border-indigo-400/40">
                     <div class="flex items-center justify-between text-xs text-gray-400">
-                        <span class="flex items-center gap-2">📅 {{ $formatDateRange($event->startAt, $event->endAt) }}</span>
-                        <span class="flex items-center gap-2">📍 {{ $event->location }}</span>
+                        <span class="flex items-center gap-2">Tanggal {{ $formatDateRange($event->startAt, $event->endAt) }}</span>
+                        <span class="flex items-center gap-2">Lokasi {{ $event->location }}</span>
                     </div>
                     <h3 class="text-lg font-semibold text-white">{{ $event->title }}</h3>
                     <p class="text-sm text-gray-400 line-clamp-3">
@@ -266,10 +264,12 @@
         </p>
     </div>
     <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-        @foreach ($featureCards as $card)
+        @foreach ($featureCards as $index => $card)
             <div class="h-full rounded-2xl border border-gray-800 bg-gray-900/70 p-6">
                 <div class="flex items-start gap-4">
-                    <span class="text-xl">{{ $card['icon'] }}</span>
+                    <span class="flex h-10 w-10 items-center justify-center rounded-full border border-indigo-500/30 bg-indigo-500/10 text-sm font-semibold text-indigo-200">
+                        {{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}
+                    </span>
                     <div>
                         <h3 class="text-lg font-semibold text-white">{{ $card['title'] }}</h3>
                         <p class="mt-2 text-sm text-gray-400">{{ $card['description'] }}</p>
@@ -327,7 +327,7 @@
                         <p>{{ $testimonial['position'] }}</p>
                     </div>
                     <span class="flex items-center gap-2 text-indigo-200">
-                        👥 <span>Komunitas Eventify</span>
+                        <span>Komunitas Eventify</span>
                     </span>
                 </div>
             </div>

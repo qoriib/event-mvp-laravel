@@ -131,7 +131,7 @@
                                         @if($existingReview)
                                             <div class="space-y-1">
                                                 <span class="inline-flex items-center gap-1 rounded-full bg-indigo-500/10 px-2 py-1 text-indigo-200">
-                                                    ⭐ {{ $existingReview->rating }}/5
+                                                    Rating {{ $existingReview->rating }}/5
                                                 </span>
                                                 @if($existingReview->comment)
                                                     <p class="text-xs text-gray-400 line-clamp-2">{{ $existingReview->comment }}</p>

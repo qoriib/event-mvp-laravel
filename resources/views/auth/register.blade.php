@@ -3,13 +3,13 @@
 @section('title', 'Daftar')
 
 @section('content')
-<section class="mx-auto max-w-xl space-y-6 rounded-3xl border border-gray-800 bg-gray-900/70 p-8 shadow-xl">
-    <div class="space-y-2 text-center">
-        <h1 class="text-2xl font-semibold text-white">Daftar Eventify</h1>
-        <p class="text-sm text-gray-400">Bergabung sebagai peserta atau organizer untuk merancang pengalaman terbaik.</p>
-    </div>
+<section class="space-y-6 rounded-2xl border border-gray-800 bg-gray-900/80 p-8 shadow-lg">
+    <header class="space-y-1 text-center">
+        <h1 class="text-2xl font-semibold text-white">Buat Akun</h1>
+        <p class="text-sm text-gray-400">Isi detail singkat untuk mulai menggunakan Eventify.</p>
+    </header>
 
-    <form action="{{ route('register.store') }}" method="POST" class="space-y-5">
+    <form action="{{ route('register.store') }}" method="POST" class="space-y-4">
         @csrf
         <div class="grid gap-4 md:grid-cols-2">
             <div class="space-y-2">

@@ -3,13 +3,13 @@
 @section('title', 'Masuk')
 
 @section('content')
-<section class="mx-auto max-w-md space-y-6 rounded-3xl border border-gray-800 bg-gray-900/70 p-8 shadow-xl">
-    <div class="space-y-2 text-center">
-        <h1 class="text-2xl font-semibold text-white">Masuk ke Eventify</h1>
-        <p class="text-sm text-gray-400">Kelola tiket, event, dan pengalamanmu bersama kami.</p>
-    </div>
+<section class="space-y-6 rounded-2xl border border-gray-800 bg-gray-900/80 p-8 shadow-lg">
+    <header class="space-y-1 text-center">
+        <h1 class="text-2xl font-semibold text-white">Masuk</h1>
+        <p class="text-sm text-gray-400">Gunakan email dan kata sandi untuk melanjutkan.</p>
+    </header>
 
-    <form action="{{ route('login.store') }}" method="POST" class="space-y-5">
+    <form action="{{ route('login.store') }}" method="POST" class="space-y-4">
         @csrf
         <div class="space-y-2">
             <label for="email" class="text-sm font-medium text-gray-200">Email</label>
@@ -40,11 +40,15 @@
             />
         </div>
 
-        <div class="text-right text-sm">
+        <div class="flex items-center justify-between text-sm">
+            <label class="flex items-center gap-2 text-gray-300">
+                <input type="checkbox" name="remember" class="h-4 w-4 rounded border-gray-600 bg-gray-900 text-indigo-500 focus:ring-indigo-500" />
+                Ingat saya
+            </label>
             <a href="#" class="text-indigo-300 hover:text-indigo-100">Lupa kata sandi?</a>
         </div>
 
-        <button type="submit" class="w-full rounded-lg bg-indigo-500 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-400">
+        <button type="submit" class="w-full rounded-lg bg-indigo-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-400">
             Masuk
         </button>
     </form>
