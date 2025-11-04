@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>{{ config('app.name', 'Eventify') }}</title>
+        <title>{{ config('app.name', 'EventLink') }}</title>
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -11,7 +11,7 @@
     <body class="bg-gray-950 text-gray-100 min-h-screen">
         <header class="border-b border-gray-800 bg-gray-900/80 backdrop-blur">
             <nav class="container mx-auto flex flex-wrap items-center justify-between gap-4 px-5 py-4">
-                <a href="{{ route('home') }}" class="text-xl font-semibold text-indigo-400">Eventify</a>
+                <a href="{{ route('home') }}" class="text-xl font-semibold text-indigo-400">{{ config('app.name', 'EventLink') }}</a>
                 <div class="flex items-center gap-3 text-sm">
                     <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'text-white' : 'text-gray-300 hover:text-white' }}">Home</a>
                     <a href="{{ route('events.index') }}" class="{{ request()->routeIs('events.*') ? 'text-white' : 'text-gray-300 hover:text-white' }}">Events</a>
@@ -68,7 +68,7 @@
         </main>
         <footer class="border-t border-gray-800 bg-gray-900/90">
             <div class="container mx-auto flex flex-col gap-4 px-5 py-6 text-sm text-gray-400 md:flex-row md:items-center md:justify-between">
-                <span>&copy; {{ date('Y') }} Eventify. All rights reserved.</span>
+                <span>&copy; {{ date('Y') }} {{ config('app.name', 'EventLink') }}. All rights reserved.</span>
                 <div class="flex items-center gap-4">
                     <a href="#" class="hover:text-white">Terms</a>
                     <a href="#" class="hover:text-white">Privacy</a>

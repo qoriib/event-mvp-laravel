@@ -45,7 +45,7 @@ class UsersSeeder extends Seeder
         }
 
         User::create([
-            'email' => 'soundwave@eventify.com',
+            'email' => 'soundwave@eventlink.com',
             'name' => 'Soundwave Organizer',
             'passwordHash' => 'password',
             'role' => User::ROLE_ORGANIZER,

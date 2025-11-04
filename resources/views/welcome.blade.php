@@ -4,7 +4,7 @@
 @php
     $heroStats = [
         ['label' => 'Event aktif', 'value' => '120+', 'description' => 'Konser & festival bulan ini'],
-        ['label' => 'Organizer terpercaya', 'value' => '80+', 'description' => 'Partner resmi Eventify'],
+        ['label' => 'Organizer terpercaya', 'value' => '80+', 'description' => 'Partner resmi EventLink'],
         ['label' => 'Pengguna terdaftar', 'value' => '45K', 'description' => 'Komunitas penikmat event'],
     ];
 
@@ -40,7 +40,7 @@
 
     $testimonials = [
         [
-            'quote' => 'Eventify mempermudah kami merilis lineup festival dalam satu malam. Penjualan tiket early bird naik 3x dibanding tahun lalu.',
+            'quote' => 'EventLink mempermudah kami merilis lineup festival dalam satu malam. Penjualan tiket early bird naik 3x dibanding tahun lalu.',
             'name' => 'Arini Putri',
             'position' => 'Founder, Soundwave Productions',
         ],
@@ -102,7 +102,7 @@
                 Temukan pengalaman live terbaik atau kelola event kamu dengan percaya diri.
             </h1>
             <p class="text-lg text-gray-300">
-                Eventify menyatukan organizer dan penikmat event dalam satu platform. Soroti event kamu,
+                EventLink menyatukan organizer dan penikmat event dalam satu platform. Soroti event kamu,
                 atur penjualan tiket, dan hadirkan pengalaman tak terlupakan bagi audiens.
             </p>
         </div>
@@ -254,7 +254,7 @@
 <section class="space-y-8">
     <div class="flex flex-col items-center text-center gap-3">
         <span class="rounded-full border border-pink-500/30 bg-pink-500/10 px-4 py-1 text-xs font-semibold uppercase tracking-wide text-pink-200">
-            Why Eventify
+            Why EventLink
         </span>
         <h2 class="text-3xl font-semibold text-white md:text-4xl">
             Semua tools yang kamu butuhkan dalam satu platform
@@ -290,7 +290,7 @@
                 Workflow cepat dari ide sampai pintu masuk venue.
             </h2>
             <p class="text-gray-100/80">
-                Tinggalkan spreadsheet dan korespondensi manual. Eventify menyediakan alur kerja terpadu untuk mengelola penjualan tiket, validasi peserta, hingga evaluasi pasca-event.
+                Tinggalkan spreadsheet dan korespondensi manual. EventLink menyediakan alur kerja terpadu untuk mengelola penjualan tiket, validasi peserta, hingga evaluasi pasca-event.
             </p>
         </div>
         <div class="grid gap-4 lg:max-w-xl">
@@ -327,7 +327,7 @@
                         <p>{{ $testimonial['position'] }}</p>
                     </div>
                     <span class="flex items-center gap-2 text-indigo-200">
-                        <span>Komunitas Eventify</span>
+                        <span>Komunitas EventLink</span>
                     </span>
                 </div>
             </div>
@@ -337,7 +337,7 @@
 
 <section class="rounded-3xl border border-indigo-500/30 bg-gradient-to-br from-indigo-600/30 via-indigo-500/20 to-purple-500/20 p-10 text-center">
     <h2 class="text-3xl font-semibold text-white md:text-4xl">
-        Siap meluncurkan event dengan dukungan penuh Eventify?
+        Siap meluncurkan event dengan dukungan penuh EventLink?
     </h2>
     <p class="mt-3 text-base text-indigo-50/90">
         Aktifkan akun organizer, pasarkan eventmu ke puluhan ribu audiens, dan kelola transaksi secara aman.

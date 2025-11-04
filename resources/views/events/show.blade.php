@@ -107,12 +107,12 @@
                             <div class="rounded-xl border border-gray-800 bg-gray-900/70 p-3">
                                 <p class="font-semibold text-white">Bank BCA</p>
                                 <p>No. Rekening: <span class="font-mono">123-456-7890</span></p>
-                                <p>a.n Eventify Indonesia</p>
+                                <p>a.n EventLink Indonesia</p>
                             </div>
                             <div class="rounded-xl border border-gray-800 bg-gray-900/70 p-3">
                                 <p class="font-semibold text-white">Bank Mandiri</p>
                                 <p>No. Rekening: <span class="font-mono">987-654-3210</span></p>
-                                <p>a.n Eventify Indonesia</p>
+                                <p>a.n EventLink Indonesia</p>
                             </div>
                         </div>
                     </div>
@@ -155,7 +155,7 @@
 
                                 @if($transaction->status === \App\Models\Transaction::STATUS_WAITING_PAYMENT)
                                     <div class="rounded-xl border border-indigo-500/20 bg-indigo-500/10 p-3 text-xs text-indigo-100">
-                                        Transfer ke BCA 123-456-7890 a.n Eventify Indonesia atau Mandiri 987-654-3210 a.n Eventify Indonesia, lalu unggah bukti melalui form berikut.
+                                        Transfer ke BCA 123-456-7890 a.n EventLink Indonesia atau Mandiri 987-654-3210 a.n EventLink Indonesia, lalu unggah bukti melalui form berikut.
                                     </div>
                                     <form action="{{ route('transactions.proof', $transaction->id) }}" method="POST" enctype="multipart/form-data" class="space-y-2">
                                         @csrf

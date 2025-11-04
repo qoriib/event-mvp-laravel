@@ -6,7 +6,7 @@
 <section class="space-y-6 rounded-2xl border border-gray-800 bg-gray-900/80 p-8 shadow-lg">
     <header class="space-y-1 text-center">
         <h1 class="text-2xl font-semibold text-white">Buat Akun</h1>
-        <p class="text-sm text-gray-400">Isi detail singkat untuk mulai menggunakan Eventify.</p>
+        <p class="text-sm text-gray-400">Isi detail singkat untuk mulai menggunakan EventLink.</p>
     </header>
 
     <form action="{{ route('register.store') }}" method="POST" class="space-y-4">
